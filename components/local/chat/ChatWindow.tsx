@@ -1,9 +1,9 @@
 "use client";
 import React from 'react';
-import UserMessage from '@/components/local/chat//UserMessage';
-import InputBar from '@/components/local/chat//InputBar';
-import ErrorResponse from '@/components/local/chat//ErrorResponse';
-import AgentMessage from '@/components/local/chat/AgentMessage';
+import UserMessage from './UserMessage';
+import AgentMessage from './AgentMessage';
+import InputBar from './InputBar';
+import ErrorResponse from './ErrorResponse';
 
 type RestaurantCard = {
   name: string;
