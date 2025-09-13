@@ -7,6 +7,7 @@ import Map from "@/components/local/Map";
 import ChatWindow from "@/components/local/chat/ChatWindow";
 import { MockPlace } from "@/lib/types";
 import { mockRestaurants } from "@/lib/mockRestaurants";
+import { createSession, runQuery } from "@/lib/utils/api";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { DialogTitle } from "@/components/ui/dialog";
 
@@ -18,6 +19,15 @@ export default function Home() {
   const [restaurants, setRestaurants] = useState<MockPlace[]>(mockRestaurants);
   const [openChat, setOpenChat] = useState(false);
 
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+
+  // For demo, use static user/app/session
+  const appName = 'amala_finder_agent';
+  const userId = 'u_123';
+
+  // Filtered restaurants (fallback)
   const filtered = restaurants.filter(
     r =>
       r.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -44,24 +54,60 @@ export default function Home() {
     ]);
   };
 
+  // Search handler
+  const handleSearch = async () => {
+    setLoadingSearch(true);
+    try {
+      // Create session if not exists
+      let sid = sessionId;
+      if (!sid) {
+        sid = `s_${Date.now()}`;
+        const created = await createSession(appName, userId, sid);
+        console.log('Session created:', created);
+        setSessionId(sid);
+      }
+      // Run query
+      const result = await runQuery({ appName, userId, sessionId: sid, text: search });
+      
+      console.log(result, "search result")// You may need to adjust how you parse/display results
+      // setSearchResults(result?.results || []);
+    } catch (err) {
+      console.error('Search error:', err);
+    } finally {
+      setLoadingSearch(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center relative">
       <header className="w-full py-8 flex flex-col items-center">
         <h1 className="text-3xl font-bold mb-2">Amala Atlas</h1>
         <p className="text-lg text-gray-300">Discover, submit, and verify the best Amala spots in Lagos</p>
       </header>
-      <SearchBox value={search} onChange={setSearch} onSearch={() => {}} />
+  <SearchBox value={search} onChange={setSearch} onSearch={handleSearch} />
       <button
         className='bg-lime-600 text-white px-6 py-2 rounded mb-4 hover:bg-lime-700'
         onClick={() => setShowModal(true)}
       >
         Add Amala Spot
       </button>
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl px-4">
-        {filtered.map((r, i) => (
-          <RestaurantCard key={i} restaurant={r} />
-        ))}
-      </div> */}
+      {/* Search results (API) */}
+      {loadingSearch && <div className="text-lime-500">Searching...</div>}
+      {searchResults.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl px-4">
+          {searchResults.map((r, i) => (
+            <RestaurantCard key={i} restaurant={r} />
+          ))}
+        </div>
+      )}
+      {/* Fallback: local filter */}
+      {!loadingSearch && searchResults.length === 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl px-4">
+          {filtered.map((r, i) => (
+            <RestaurantCard key={i} restaurant={r} />
+          ))}
+        </div>
+      )}
       <AddRestaurantModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
