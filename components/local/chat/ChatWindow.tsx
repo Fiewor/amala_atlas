@@ -1,9 +1,11 @@
 "use client";
-import React from 'react';
+import React, { useRef } from 'react';
 import UserMessage from './UserMessage';
 import AgentMessage from './AgentMessage';
 import InputBar from './InputBar';
 import ErrorResponse from './ErrorResponse';
+import { createSession, runQuery } from '@/lib/utils/api';
+import cuid from 'cuid';
 
 type RestaurantCard = {
   name: string;
@@ -34,41 +36,57 @@ type LocationApiResponse =
   | { status: 'success'; data: RestaurantCard }
   | { status: 'noResults'; data: null };
 
-const ChatWindow: React.FC = () => {
-  const [messages, setMessages] = React.useState<Message[]>([
-    { type: 'user', text: "I'm looking for the best Amala spots in Lagos. Can you help?" },
-    { type: 'agent', text: "Of course! Here is a top-rated Amala restaurant I found for you:", card: { name: 'Iya Basira Amala Joint', description: 'Authentic Amala & Ewedu soup', image: '/amala.jpg' } },
-  ]);
+
+function ChatWindow() {
+  const [messages, setMessages] = React.useState<Message[]>([]);
   const [input, setInput] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [sessionId, setSessionId] = React.useState<string | null>(null);
+  const appName = 'amala_finder_agent';
+  const userId = 'u_123';
+  const sessionStarted = useRef(false);
+
+  // Start session on first message
+  const ensureSession = async () => {
+    if (!sessionStarted.current) {
+      const sid = `s_${cuid()}`;
+      await createSession(appName, userId, sid);
+      setSessionId(sid);
+      sessionStarted.current = true;
+      return sid;
+    }
+    return sessionId;
+  };
 
   const handleSend = async () => {
     if (!input.trim()) return;
-
-    // Add user message
-    setMessages([...messages, { type: 'user', text: input }]);
+    setMessages(prev => [...prev, { type: 'user', text: input }]);
     setInput('');
     setIsLoading(true);
-
     try {
-  const response: LocationApiResponse = await fetchLocationData(input);
-
-      if (response.status === 'success' && response.data) {
+      // Ensure session
+      let sid = sessionId;
+      if (!sid) {
+        sid = await ensureSession();
+      }
+      // Send message to API
+      const result = await runQuery({ appName, userId, sessionId: sid!, text: input });
+      // Parse agent response (customize as needed)
+      if (result?.reply) {
         setMessages(prev => [
           ...prev,
-          { type: 'agent', text: "Of course! Here is a top-rated restaurant I found for you:", card: response.data },
+          { type: 'agent', text: result.reply },
         ]);
-      } else if (response.status === 'noResults') {
-        setMessages(prev => [...prev, { type: 'error', errorType: 'noRestaurant' }]);
+      } else {
+        setMessages(prev => [
+          ...prev,
+          { type: 'error', errorType: 'noReply', message: 'No reply from agent.' },
+        ]);
       }
     } catch (error) {
       setMessages(prev => [
         ...prev,
-        { 
-          type: 'error', 
-          errorType: 'apiFailure', 
-          message: typeof error === 'object' && error !== null && 'message' in error ? String((error as { message?: unknown }).message) : undefined 
-        },
+        { type: 'error', errorType: 'apiFailure', message: typeof error === 'object' && error !== null && 'message' in error ? String((error as { message?: unknown }).message) : undefined },
       ]);
     } finally {
       setIsLoading(false);
@@ -100,24 +118,24 @@ const ChatWindow: React.FC = () => {
       <InputBar input={input} setInput={setInput} onSend={handleSend} />
     </div>
   );
-};
+}
 
 // Mock API function for location data
-const fetchLocationData = (query: string): Promise<LocationApiResponse> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (query.toLowerCase().includes('invalid')) {
-        reject(new Error('Backend error: Invalid query'));
-      } else if (query.toLowerCase().includes('none')) {
-        resolve({ status: 'noResults', data: null });
-      } else {
-        resolve({
-          status: 'success',
-          data: { name: 'Iya Basira Amala Joint', description: 'Authentic Amala & Ewedu soup', image: '/amala.jpg' },
-        });
-      }
-    }, 2000);
-  });
-};
+// const fetchLocationData = (query: string): Promise<LocationApiResponse> => {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       if (query.toLowerCase().includes('invalid')) {
+//         reject(new Error('Backend error: Invalid query'));
+//       } else if (query.toLowerCase().includes('none')) {
+//         resolve({ status: 'noResults', data: null });
+//       } else {
+//         resolve({
+//           status: 'success',
+//           data: { name: 'Iya Basira Amala Joint', description: 'Authentic Amala & Ewedu soup', image: '/amala.jpg' },
+//         });
+//       }
+//     }, 2000);
+//   });
+// };
 
 export default ChatWindow;
