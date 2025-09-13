@@ -2,10 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
-import { mockRestaurants } from '@/lib/mockRestaurants';
+// import { mockRestaurants } from '@/lib/mockRestaurants';
 import { MockPlace } from '@/lib/types';
 
-const Map = () => {
+const Map = ({mockRestaurants}: {mockRestaurants: MockPlace[]}) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const defaultLocation = { lat: 6.5244, lng: 3.3792 }; // Lagos, Nigeria
 
@@ -86,7 +86,7 @@ const Map = () => {
       );
       */
     });
-  }, []);
+  }, [mockRestaurants]);
 
   return <div ref={mapRef} className='w-full h-[50vh]' />;
 };

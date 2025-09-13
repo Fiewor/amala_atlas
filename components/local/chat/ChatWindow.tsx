@@ -76,7 +76,7 @@ const ChatWindow: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#0A0A0A] p-4">
+    <div className="flex flex-col h-[80vh] bg-[#0A0A0A] p-4">
       <div className="flex-1 overflow-y-auto space-y-4 flex flex-col-reverse">
         {messages.slice().reverse().map((msg, index) => {
           const key = messages.length - 1 - index; // Reverse key to match order
