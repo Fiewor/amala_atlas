@@ -67,8 +67,8 @@ export default function Home() {
       {/* Map UI placeholder */}
       <div className="mt-8 w-full max-w-5xl px-4">
         <div className="bg-gray-800 rounded-lg h-64 flex items-center justify-center text-gray-400">
-           <Map />
-          <ChatWindow />
+           
+          {/* <ChatWindow /> */}
         </div>
       </div>
 
