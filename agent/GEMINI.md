@@ -136,7 +136,7 @@ ADK allows you to define agents, tools, and even multi-agent workflows using a s
     ```bash
     # For Google AI Studio (simpler setup)
     GOOGLE_GENAI_USE_VERTEXAI=0
-    GOOGLE_API_KEY=<your-Google-Gemini-API-key>
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=<your-Google-Gemini-API-key>
     
     # For Google Cloud Vertex AI (production)
     GOOGLE_GENAI_USE_VERTEXAI=1
@@ -771,7 +771,7 @@ ADK's model flexibility allows integrating various LLMs for different needs.
 
 *   **Default Integration**: Native support via `google-genai` library.
 *   **AI Studio (Easy Start)**:
-    *   Set `GOOGLE_API_KEY="YOUR_API_KEY"` (environment variable).
+    *   Set `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="YOUR_API_KEY"` (environment variable).
     *   Set `GOOGLE_GENAI_USE_VERTEXAI="False"`.
     *   Model strings: `"gemini-2.5-flash"`, `"gemini-2.5-pro"`, etc.
 *   **Vertex AI (Production)**:
@@ -831,7 +831,7 @@ from google.genai import configure as genai_configure
 
 genai_configure.use_defaults(
     timeout=60, # seconds
-    client_options={"api_key": os.getenv("GOOGLE_API_KEY")},
+    client_options={"api_key": os.getenv("NEXT_PUBLIC_GOOGLE_MAPS_API_KEY")},
 )
 ```
 

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
-import { mockRestaurants, MockPlace } from '../lib/mockRestaurants';
+import { mockRestaurants } from '@/lib/mockRestaurants';
+import { MockPlace } from '@/lib/types';
 
 const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);

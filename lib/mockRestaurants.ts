@@ -1,0 +1,61 @@
+import { MockPlace } from "./types";
+
+export const mockRestaurants: MockPlace[] = [
+  {
+    place_id: "mock_1",
+    address: "12, Food Street",
+    city: "Lagos",
+    country: "Nigeria",
+    openHours: "8am - 10pm",
+    priceBand: "₦₦",
+    photoUrl: "/amala.jpg",
+
+    name: "Iya Basira Amala Joint",
+    geometry: { location: { lat: 6.5244, lng: 3.3792 } },
+  },
+  {
+    place_id: "mock_2",
+    name: "Spicy Amala Place",
+    address: "12, Food Street",
+    city: "Lagos",
+    country: "Nigeria",
+    openHours: "8am - 10pm",
+    priceBand: "₦₦",
+    photoUrl: "/amala.jpg",
+    geometry: { location: { lat: 6.5321, lng: 3.3645 } },
+  },
+  {
+    place_id: "mock_3",
+    name: "Iya Meta",
+    address: "12, Food Street",
+    city: "Lagos",
+    country: "Nigeria",
+    openHours: "8am - 10pm",
+    priceBand: "₦₦",
+    photoUrl: "/amala.jpg",
+    geometry: { location: { lat: 6.5178, lng: 3.3708 } },
+  },
+  {
+    place_id: "mock_4",
+    name: "Missy's Spot Canteen",
+    address: "12, Food Street",
+    city: "Lagos",
+    country: "Nigeria",
+    openHours: "8am - 10pm",
+    priceBand: "₦₦",
+    photoUrl: "/amala.jpg",
+    geometry: { location: { lat: 6.5103, lng: 3.3856 } },
+  },
+  {
+    place_id: "mock_5",
+    name: "Amala Hut",
+    address: "12, Food Street",
+    city: "Lagos",
+    country: "Nigeria",
+    openHours: "8am - 10pm",
+    priceBand: "₦₦",
+    photoUrl: "/amala.jpg",
+    geometry: { location: { lat: 6.5289, lng: 3.3901 } },
+  },
+];
+
