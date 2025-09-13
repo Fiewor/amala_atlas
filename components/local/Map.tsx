@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
+import { createRoot } from 'react-dom/client';
 import { mockRestaurants } from '@/lib/mockRestaurants';
 import { MockPlace } from '@/lib/types';
+import MapCard from './MapCard';
 
 const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -19,7 +21,7 @@ const Map = () => {
     loader.load().then(async () => {
       if (!mapRef.current) return;
 
-      const { Map } = (await google.maps.importLibrary(
+      const { Map, InfoWindow } = (await google.maps.importLibrary(
         'maps'
       )) as google.maps.MapsLibrary;
       const { AdvancedMarkerElement } = (await google.maps.importLibrary(
@@ -51,13 +53,28 @@ const Map = () => {
         mapId: 'DEMO_MAP_ID', // Replace with custom map ID if provided
       });
 
+      // Initialize single InfoWindow
+      const iw = new InfoWindow();
+
       // Add markers for mock restaurants
       mockRestaurants.forEach((place: MockPlace) => {
-        new AdvancedMarkerElement({
+        const marker = new AdvancedMarkerElement({
           map,
           position: place.geometry.location,
           title: place.name,
         });
+
+        marker.addListener('click', () => {
+          const container = document.createElement('div');
+          const root = createRoot(container);
+          root.render(<MapCard place={place} />);
+          iw.setContent(container);
+          iw.open(map, marker);
+        });
+      });
+
+      map.addListener('click', () => {
+        iw.close();
       });
 
       // Placeholder for real Places API integration (uncomment when AI agent is ready)
@@ -67,17 +84,24 @@ const Map = () => {
       service.nearbySearch(
         {
           location: center,
-          radius: 5000, // 5km radius
+          radius: 5000,
           type: "restaurant",
         },
         (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && results) {
             results.forEach((place) => {
               if (place.geometry?.location) {
-                new AdvancedMarkerElement({
+                const marker = new AdvancedMarkerElement({
                   map,
                   position: place.geometry.location,
                   title: place.name,
+                });
+                marker.addListener("click", () => {
+                  const container = document.createElement("div");
+                  const root = createRoot(container);
+                  root.render(<MapCard place={place} />);
+                  iw.setContent(container);
+                  iw.open(map, marker);
                 });
               }
             });
