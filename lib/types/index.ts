@@ -17,4 +17,6 @@ export interface MockPlace {
   openPeriod?: "AM" | "PM";
   closeHour?: string;
   closePeriod?: "AM" | "PM";
+  rating?: number;
+  verifiedCount?: number;
 }

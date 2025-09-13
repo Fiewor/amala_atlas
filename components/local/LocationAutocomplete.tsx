@@ -1,3 +1,4 @@
+// app/components/local/LocationAutocomplete.tsx
 import React, { useState } from "react";
 
 interface Prediction {
@@ -27,21 +28,21 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({ onSelect })
       <input
         type="text"
         value={input}
-        onChange={e => {
+        onChange={(e) => {
           setInput(e.target.value);
           if (e.target.value.length > 2) fetchPredictions(e.target.value);
           else setResults([]);
         }}
         placeholder="Search location..."
-        className="w-full px-3 py-2 border rounded"
+        className="w-full bg-[#0A0A0A] text-white px-4 py-2 rounded-lg border border-gray-700 focus:border-lime-500 outline-none"
       />
-      {loading && <div className="absolute right-2 top-2 text-xs text-gray-400">Loading...</div>}
+      {loading && <div className="absolute right-3 top-2 text-xs text-gray-400">Loading...</div>}
       {results.length > 0 && (
-        <ul className="absolute left-0 right-0 bg-white text-black rounded shadow mt-1 z-10">
-          {results.map(pred => (
+        <ul className="absolute left-0 right-0 bg-[#1E1E1E] text-white rounded-lg shadow-md mt-1 z-10">
+          {results.map((pred) => (
             <li
               key={pred.place_id}
-              className="px-3 py-2 cursor-pointer hover:bg-lime-100"
+              className="px-4 py-2 cursor-pointer hover:bg-[#2A2A2A]"
               onClick={() => {
                 onSelect(pred);
                 setInput(pred.description);
