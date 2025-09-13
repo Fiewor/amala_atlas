@@ -13,32 +13,32 @@ import { DialogTitle } from "@/components/ui/dialog";
 
 
 export default function Home() {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [restaurants, setRestaurants] = useState<MockPlace[]>(mockRestaurants);
   const [openChat, setOpenChat] = useState(false);
 
-  const filtered = restaurants.filter(r =>
-    r.name.toLowerCase().includes(search.toLowerCase()) ||
-    r.address.toLowerCase().includes(search.toLowerCase()) ||
-    r.city.toLowerCase().includes(search.toLowerCase())
+  const filtered = restaurants.filter(
+    r =>
+      r.name.toLowerCase().includes(search.toLowerCase()) ||
+      r.address.toLowerCase().includes(search.toLowerCase()) ||
+      r.city.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleAddRestaurant = (data: Partial<MockPlace>) => {
-
-    console.log("New restaurant added:", data);
+    console.log('New restaurant added:', data);
     // In real app, send to backend
     setRestaurants(prev => [
       {
-        ...data, 
+        ...data,
         geometry: {
           location: {
             lat: data.geometry?.location.lat || 0,
-            lng: data.geometry?.location.lng || 0
-          }
+            lng: data.geometry?.location.lng || 0,
+          },
         },
-        openHours: data.openHours || "",
-        priceBand: data.priceBand || "",
+        openHours: data.openHours || '',
+        priceBand: data.priceBand || '',
       } as MockPlace,
       ...prev,
     ]);
@@ -52,7 +52,7 @@ export default function Home() {
       </header>
       <SearchBox value={search} onChange={setSearch} onSearch={() => {}} />
       <button
-        className="bg-lime-600 text-white px-6 py-2 rounded mb-4 hover:bg-lime-700"
+        className='bg-lime-600 text-white px-6 py-2 rounded mb-4 hover:bg-lime-700'
         onClick={() => setShowModal(true)}
       >
         Add Amala Spot
