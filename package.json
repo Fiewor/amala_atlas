@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@iconify/react": "^6.0.1",
+    "@googlemaps/js-api-loader": "^1.16.10",
     "@modelcontextprotocol/sdk": "^1.18.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "class-variance-authority": "^0.7.1",
@@ -21,11 +22,12 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
+    "@types/google.maps": "^3.58.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

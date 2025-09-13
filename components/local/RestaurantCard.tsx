@@ -1,10 +1,8 @@
-import { Restaurant } from "@/lib/types";
+import { MockPlace } from "@/lib/types";
 import Image from "next/image";
 import React from "react";
 
-
-
-const RestaurantCard: React.FC<{ restaurant: Restaurant }> = ({ restaurant }) => (
+const RestaurantCard: React.FC<{ restaurant: MockPlace }> = ({ restaurant }) => (
   <div className="bg-white rounded-lg shadow p-4 flex flex-col gap-2">
     {restaurant.photoUrl && (
       <Image src={restaurant.photoUrl} alt={restaurant.name} width={320} height={160} className="w-80 h-40 object-cover rounded" />

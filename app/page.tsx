@@ -3,16 +3,17 @@ import React, { useState } from "react";
 import RestaurantCard from "../components/local/RestaurantCard";
 import SearchBox from "../components/local/SearchBox";
 import AddRestaurantModal from "../components/local/AddRestaurantModal";
-import { mockRestaurants } from "@/lib/data";
-import { Restaurant } from "@/lib/types";
-import ChatWindow from "./components/chat/ChatWindow";
+import Map from "@/components/local/Map";
+import ChatWindow from "@/components/local/chat/ChatWindow";
+import { MockPlace } from "@/lib/types";
+import { mockRestaurants } from "@/lib/mockRestaurants";
 
 
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [restaurants, setRestaurants] = useState<Restaurant[]>(mockRestaurants);
+  const [restaurants, setRestaurants] = useState<MockPlace[]>(mockRestaurants);
 
   const filtered = restaurants.filter(r =>
     r.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -20,18 +21,22 @@ export default function Home() {
     r.city.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleAddRestaurant = (data: Partial<Restaurant>) => {
+  const handleAddRestaurant = (data: Partial<MockPlace>) => {
 
     console.log("New restaurant added:", data);
     // In real app, send to backend
     setRestaurants(prev => [
       {
-        ...data,
-        lat: data.lat || 0,
-        lng: data.lng || 0,
+        ...data, 
+        geometry: {
+          location: {
+            lat: data.geometry?.location.lat || 0,
+            lng: data.geometry?.location.lng || 0
+          }
+        },
         openHours: data.openHours || "",
         priceBand: data.priceBand || "",
-      } as Restaurant,
+      } as MockPlace,
       ...prev,
     ]);
   };
@@ -62,10 +67,11 @@ export default function Home() {
       {/* Map UI placeholder */}
       <div className="mt-8 w-full max-w-5xl px-4">
         <div className="bg-gray-800 rounded-lg h-64 flex items-center justify-center text-gray-400">
-          Map UI coming soon...
+           <Map />
           <ChatWindow />
         </div>
       </div>
+
     </div>
   );
 }

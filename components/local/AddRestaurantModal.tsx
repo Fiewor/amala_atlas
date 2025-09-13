@@ -1,15 +1,15 @@
-import LocationAutocomplete from "@/app/components/local/LocationAutocomplete";
-import { Restaurant } from "@/lib/types";
+import LocationAutocomplete from "@/components/local/LocationAutocomplete";
+import { MockPlace } from "@/lib/types";
 import React, { useState } from "react";
 
 interface AddRestaurantModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Partial<Restaurant>) => void;
+  onSubmit: (data: Partial<MockPlace>) => void;
 }
 
 const AddRestaurantModal: React.FC<AddRestaurantModalProps> = ({ isOpen, onClose, onSubmit }) => {
-  const [form, setForm] = useState<Partial<Restaurant>>({});
+  const [form, setForm] = useState<Partial<MockPlace>>({});
   const [selectedLocation, setSelectedLocation] = useState<{ description: string; place_id: string } | null>(null);
 
   if (!isOpen) return null;

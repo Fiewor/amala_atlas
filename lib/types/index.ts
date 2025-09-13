@@ -1,10 +1,15 @@
-export type Restaurant = {
+export interface MockPlace {
+  place_id: string;
   name: string;
   address: string;
   city: string;
   country: string;
-  lat: number;
-  lng: number;
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
   openHours: string;
   priceBand: string;
   photoUrl?: string;
@@ -12,4 +17,4 @@ export type Restaurant = {
   openPeriod?: "AM" | "PM";
   closeHour?: string;
   closePeriod?: "AM" | "PM";
-};
+}
